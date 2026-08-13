@@ -1,0 +1,14 @@
+{
+  "^NSEBANK": "Financials",
+  "^CNXFIN": "Fin Services",
+  "^CNXPSUBANK": "PSU Banks",
+  "^CNXIT": "IT",
+  "^CNXPHARMA": "Healthcare",
+  "^CNXFMCG": "FMCG",
+  "^CNXAUTO": "Auto",
+  "^CNXMETAL": "Materials",
+  "^CNXREALTY": "Real Estate",
+  "^CNXINFRA": "Industrials",
+  "^CNXENERGY": "Energy",
+  "^NSEMDCP50": "Midcap 50"
+}
