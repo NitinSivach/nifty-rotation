@@ -95,6 +95,18 @@ Notes:
 python -m pytest -q
 ```
 
+Coverage (report includes the dashboard helpers, backtest, settings, AI
+advisor and the data-refresh scripts):
+
+```powershell
+python -m pytest --cov=app --cov=backtest --cov=settings --cov=ai_advisor --cov=data --cov=check_tickers
+```
+
+A `pyproject.toml` ships alongside `requirements.txt` so you can also install
+the project as a package (metadata, ruff lint config, coverage config). The
+Cloud and cron workflows keep using the pinned `requirements.txt` for
+reproducibility.
+
 ## License
 
 MIT — see [LICENSE](LICENSE).
