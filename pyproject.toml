@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "nifty-sector-rotation"
+version = "0.1.0"
+description = "Nifty 50 sector-rotation research dashboard: momentum + CMF ranking, backtests, regime filter, MF/FII flows, AI advisor."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "MIT" }
+authors = [
+    { name = "Nitin Sivach" },
+]
+dependencies = [
+    "yfinance>=1.5.2",
+    "pandas>=2.0",
+    "numpy>=1.24",
+    "matplotlib>=3.7",
+    "seaborn>=0.13",
+    "streamlit>=1.30",
+    "plotly>=5.18",
+    "requests>=2.31",
+    "beautifulsoup4>=4.12",
+    "lxml>=5.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "pytest-cov>=5.0",
+    "ruff>=0.6",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# CMF/from-the-window tests build small deterministic frames; keep it fast.
+addopts = "-q"
+filterwarnings = [
+    # yfinance may emit upstream DeprecationWarnings we don't own.
+    "ignore::DeprecationWarning",
+]
+
+[tool.coverage.run]
+source = ["app", "backtest", "settings", "ai_advisor", "check_tickers", "data"]
+omit = ["tests/*"]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.ruff]
+line-length = 119
+target-version = "py311"
+
+[tool.ruff.lint]
+# Bug-catching only (unused imports/vars, undefined names, logic-breaking
+# syntax). The dashboard's long Streamlit render lines are pre-existing
+# style, not errors, so E501 and the SIM/UP refactor hints are left out to
+# keep the lint clean on the current tree.
+select = ["F", "E9"]
