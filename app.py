@@ -132,29 +132,18 @@ def fetch_ohlcv(tickers, period):
 def compute_cmf(ohlcv_dict, lookback_days):
     """Compute Chaikin Money Flow per ticker over lookback_days.
 
-    Returns a dict ticker->cmf_value (float or None).
+    Returns a dict ticker -> cmf_value (float or None). Delegates the per-ticker
+    Chaikin accumulation/distribution math to ``backtest.rolling_cmf`` so the
+    dashboard and the backtest share a single implementation.
     """
     cmf = {}
     for ticker, df in ohlcv_dict.items():
         try:
-            if len(df) < lookback_days:
-                cmf[ticker] = None
-                continue
-            recent = df.tail(lookback_days)
-            high = recent["High"]
-            low = recent["Low"]
-            close = recent["Close"]
-            vol = recent["Volume"]
-            denom = high - low
-            # avoid division by zero
-            mfm = ((close - low) - (high - close)) / denom.replace(0, np.nan)
-            money_flow = mfm * vol
-            total_money_flow = money_flow.sum(skipna=True)
-            total_volume = vol.sum(skipna=True)
-            if pd.isna(total_money_flow) or total_volume == 0:
+            series = backtest.rolling_cmf(df, lookback_days)
+            if series is None or len(series) == 0 or pd.isna(series.iloc[-1]):
                 cmf[ticker] = None
             else:
-                cmf[ticker] = float(total_money_flow / total_volume)
+                cmf[ticker] = float(series.iloc[-1])
         except Exception:
             cmf[ticker] = None
     return cmf
